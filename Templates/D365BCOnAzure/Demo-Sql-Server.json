@@ -1,0 +1,362 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VirtualMachineName": {
+            "type": "string"
+        },
+        "NetworkInterfaceName": {
+            "defaultValue": "[concat(parameters('VirtualMachineName'), 'Nic01')]",
+            "type": "String"
+        },
+        "VirtualNetworkName": {
+            "defaultValue": "[concat(resourceGroup().name, '-vnet')]",
+            "type": "String"
+        },
+        "SubnetName": {
+            "defaultValue": "[concat(resourceGroup().name, '-Subnet')]",
+            "type": "String"
+        },
+        "PrivateIpAddress": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "EnableAcceleratedNetworking": {
+            "type": "bool"
+        },
+        "OsDiskType": {
+            "type": "string",
+            "defaultValue": "Premium_LRS"
+        },
+        "VmSize": {
+            "type": "string",
+            "defaultValue": "Standard_DS3_v2",
+            "allowedValues": [
+                "Standard_D2_v2",
+                "Standard_D3_v2",
+                "Standard_D4_v2",
+                "Standard_D5_v2",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2",
+                "Standard_D2_v3",
+                "Standard_D4_v3",
+                "Standard_D8_v3",
+                "Standard_D16_v3",
+                "Standard_D2s_v3",
+                "Standard_D4s_v3",
+                "Standard_D8s_v3",
+                "Standard_D16s_v3"
+            ]
+        },
+        "VmAdminUserName": {
+            "defaultValue": "vmadmin",
+            "type": "string"
+        },
+        "VmAdminPassword": {
+            "defaultValue": "SuperSecurePassword!",
+            "type": "secureString"
+        },
+        "DomainName": {
+            "type": "string",
+            "defaultValue":"bctest.local"
+        },
+        "DomainAdminUsername": {
+            "type": "string",
+            "defaultValue": "[concat(parameters('DomainName'), '\\', concat(parameters('VmAdminUserName')))]"
+        },
+        "DomainAdminPassword": {
+            "type": "securestring",
+            "defaultValue": "[concat(parameters('VmAdminPassword'))]"
+        },
+        "SqlConnectivityType": {
+            "defaultValue": "PRIVATE",
+            "type": "string"
+        },
+        "SqlPortNumber": {
+            "type": "int",
+            "defaultValue": 1433
+        },
+        "SqlStorageWorkloadType": {
+            "defaultValue": "GENERAL",
+            "type": "string"
+        },
+        "SqlStorageDisksConfigurationType": {
+            "defaultValue": "NEW",
+            "type": "string"
+        },
+        "SqlDataDiskProperties": {
+            "type": "object",
+            "defaultValue": {
+                "SKU": "Premium_LRS",
+                "FilePath": "F:\\data",
+                "Size": 127,
+                "WriteAcceleratorEnabled": false
+            }
+        },
+        "SqlLogDiskProperties": {
+            "type": "object",
+            "defaultValue": {
+                "SKU": "Premium_LRS",
+                "FilePath": "G:\\log",
+                "Size": 127,
+                "WriteAcceleratorEnabled": false
+            }
+        },
+        "SqlAutopatchingEnable": {
+            "type": "bool",
+            "defaultValue": false
+        },
+        "SqlAutopatchingDayOfWeek": {
+            "defaultValue": "",
+            "allowedValues": [
+                "",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday"
+            ],
+            "type": "string"
+        },
+        "SqlAutopatchingStartHour": {
+            "defaultValue": "",
+            "type": "string"
+        },
+        "sqlAutopatchingWindowDuration": {
+            "defaultValue": "",
+            "type": "string"
+        },
+        "SqlAuthenticationLogin": {
+            "defaultValue": "[concat(parameters('VmAdminUserName'))]",
+            "type": "string"
+        },
+        "SqlAuthenticationPassword": {
+            "defaultValue": "[concat(parameters('VmAdminPassword'))]",
+            "type": "securestring"
+        },
+        "tempDbPath": {
+            "type": "string",
+            "defaultValue": "D:\\tempDb"
+        },
+        "rServicesEnabled": {
+            "type": "string",
+            "defaultValue": "false"
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+        {
+            "name": "[parameters('NetworkInterfaceName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2019-07-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('VirtualNetworkName'), parameters('SubnetName'))]"
+                            },
+                            "privateIPAddress": "[parameters('PrivateIpAddress')]",
+                            "privateIPAllocationMethod": "[if(equals(parameters('PrivateIpAddress'),''),'Dynamic', 'Static')]"
+                        }
+                    }
+                ],
+                "enableAcceleratedNetworking": "[parameters('EnableAcceleratedNetworking')]"
+            }
+        },
+        {
+            "name": "[concat(parameters('VirtualMachineName'), 'DataDisk01')]",
+            "type": "Microsoft.Compute/disks",
+            "apiVersion": "2019-07-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "diskSizeGB": "[parameters('SqlDataDiskProperties').Size]",
+                "creationData": {
+                    "createOption": "Empty"
+                }
+            },
+            "sku": {
+                "name": "[parameters('SqlDataDiskProperties').SKU]"
+            }
+        },
+        {
+            "name": "[concat(parameters('VirtualMachineName'), 'LogDisk01')]",
+            "type": "Microsoft.Compute/disks",
+            "apiVersion": "2019-07-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "diskSizeGB": "[parameters('SqlLogDiskProperties').Size]",
+                "creationData": {
+                    "createOption": "Empty"
+                }
+            },
+            "sku": {
+                "name": "[parameters('SqlLogDiskProperties').SKU]"
+            }
+        },
+        {
+            "name": "[parameters('VirtualMachineName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/disks/', parameters('VirtualMachineName'), 'LogDisk01')]",
+                "[concat('Microsoft.Compute/disks/', parameters('VirtualMachineName'), 'DataDisk01')]",
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('NetworkInterfaceName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('VmSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('OsDiskType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "MicrosoftSQLServer",
+                        "offer": "SQL2016SP1-WS2016",
+                        "sku": "SQLDEV",
+                        "version": "latest"
+                    },
+                    "dataDisks": [
+                        {
+                            "lun": 0,
+                            "createOption": "Attach",
+                            "diskSizeGB": "[parameters('SqlDataDiskProperties').Size]",
+                            "writeAcceleratorEnabled": "[parameters('SqlDataDiskProperties').WriteAcceleratorEnabled]",
+                            "managedDisk": {
+                                "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('VirtualMachineName'), 'DataDisk01'))]",
+                                "storageAccountType": "[parameters('SqlDataDiskProperties').SKU]"
+                            }
+                        },
+                        {
+                            "lun": 1,
+                            "createOption": "Attach",
+                            "diskSizeGB": "[parameters('SqlLogDiskProperties').Size]",
+                            "writeAcceleratorEnabled": "[parameters('SqlLogDiskProperties').WriteAcceleratorEnabled]",
+                            "managedDisk": {
+                                "id": "[resourceId('Microsoft.Compute/disks', concat(parameters('VirtualMachineName'), 'LogDisk01'))]",
+                                "storageAccountType": "[parameters('SqlLogDiskProperties').SKU]"
+                            }
+                        }
+                    ]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('NetworkInterfaceName'))]"
+                        }
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('VirtualMachineName')]",
+                    "adminUsername": "[parameters('VmAdminUserName')]",
+                    "adminPassword": "[parameters('VmAdminPassword')]",
+                    "windowsConfiguration": {
+                        "enableAutomaticUpdates": true,
+                        "provisionVmAgent": true
+                    }
+                }
+            },
+            "resources": [
+                {
+                    "name": "vmssjoindomain",
+                    "type": "extensions",
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2019-07-01",
+                    "dependsOn": [
+                        "[concat('Microsoft.Compute/virtualMachines/', parameters('VirtualMachineName'))]"
+                    ],
+                    "properties": {
+                        "autoUpgradeMinorVersion": true,
+                        "publisher": "Microsoft.Compute",
+                        "type": "JsonADDomainExtension",
+                        "typeHandlerVersion": "1.3",
+                        "settings": {
+                            "User": "[parameters('DomainAdminUsername')]",
+                            "Name": "[parameters('DomainName')]",
+                            "Options": 3,
+                            "Restart": "true"
+                        },
+                        "protectedSettings": {
+                            "password": "[parameters('DomainAdminPassword')]"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "[parameters('VirtualMachineName')]",
+            "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+            "apiVersion": "2017-03-01-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "virtualMachineResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('VirtualMachineName'))]",
+                "sqlManagement": "Full",
+                "SqlServerLicenseType": "PAYG",
+                "AutoPatchingSettings": {
+                    "Enable": "[parameters('SqlAutopatchingEnable')]",
+                    "DayOfWeek": "[parameters('SqlAutopatchingDayOfWeek')]",
+                    "MaintenanceWindowStartingHour": "[parameters('SqlAutopatchingStartHour')]",
+                    "MaintenanceWindowDuration": "[parameters('sqlAutopatchingWindowDuration')]"
+                },
+                "KeyVaultCredentialSettings": {
+                    "Enable": false,
+                    "CredentialName": ""
+                },
+                "StorageConfigurationSettings": {
+                    "DiskConfigurationType": "[parameters('SqlStorageDisksConfigurationType')]",
+                    "StorageWorkloadType": "[parameters('SqlStorageWorkloadType')]",
+                    "SQLDataSettings": {
+                        "LUNs": [
+                            0
+                        ],
+                        "DefaultFilePath": "[parameters('SqlDataDiskProperties').FilePath]"
+                    },
+                    "SQLLogSettings": {
+                        "LUNs": [
+                            1
+                        ],
+                        "DefaultFilePath": "[parameters('SqlLogDiskProperties').FilePath]"
+                    },
+                    "SQLTempDbSettings": {
+                        "DefaultFilePath": "[parameters('tempDbPath')]"
+                    }
+                },
+                "ServerConfigurationsManagementSettings": {
+                    "SQLConnectivityUpdateSettings": {
+                        "ConnectivityType": "[parameters('SqlConnectivityType')]",
+                        "Port": "[parameters('SqlPortNumber')]",
+                        "SQLAuthUpdateUserName": "[parameters('SqlAuthenticationLogin')]",
+                        "SQLAuthUpdatePassword": "[parameters('SqlAuthenticationPassword')]"
+                    },
+                    "AdditionalFeaturesServerConfigurations": {
+                        "IsRServicesEnabled": "[parameters('rServicesEnabled')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('VirtualMachineName'), 'vmssjoindomain')]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('VirtualMachineName'))]"
+            ]
+        }
+    ],
+    "outputs": {
+        "adminUsername": {
+            "type": "string",
+            "value": "[parameters('VmAdminUserName')]"
+        }
+    }
+}
