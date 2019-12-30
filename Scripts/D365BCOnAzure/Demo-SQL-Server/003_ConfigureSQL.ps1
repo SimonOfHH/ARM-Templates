@@ -55,6 +55,8 @@ function Set-SqlServerConfiguration {
         foreach ($asm in $assemblylist) {  
             $asm = [Reflection.Assembly]::LoadWithPartialName($asm)  
         }
+        # Remove ".local" from DomainName (if existing)
+        $DomainName = $DomainName.Replace(".local","")
 
         $sqlServer = new-object ('Microsoft.SqlServer.Management.Smo.Server') $env:computername        
         Get-Service -Name MSSQLSERVER | Restart-Service -Force

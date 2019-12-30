@@ -88,13 +88,13 @@ function Install-SampleDatabase {
             $smoRestoreFile.PhysicalFileName = $( if ($File.Type -eq "L") { $LogPath } else { $DataPath } ) + "\" + [System.IO.Path]::GetFileName($File.PhysicalName)
             $smoRestore.RelocateFiles.Add($smoRestoreFile)
         }
-
-        Restore-SqlDatabase -ServerInstance $env:ComputerName -Database $smoRestore.Database -BackupFile $backupFile -RestoreAction Files -ReplaceDatabase -RelocateFile $smoRestore.RelocateFiles
+        $smoRestore.SqlRestore($server);
+        #Restore-SqlDatabase -ServerInstance $env:ComputerName -Database $smoRestore.Database -BackupFile $backupFile -RestoreAction Files -ReplaceDatabase -RelocateFile $smoRestore.RelocateFiles
     }
     try {        
         $VMCredentials = New-Object System.Management.Automation.PSCredential ("$($env:computername)\$VmAdminUser", (ConvertTo-SecureString $VmAdminPass -AsPlainText -Force))
         $session = New-PSSession -ComputerName $env:computername -Credential $VMCredentials
-        Invoke-Command -ScriptBlock $scriptBlock -ArgumentList $SqlAdminUser, $SqlAdminPass, $DomainName -Session $session
+        Invoke-Command -ScriptBlock $scriptBlock -ArgumentList $SqlAdminUser, $SqlAdminPass, $DomainName, $InstallDirectory -Session $session
         $session | Remove-PSSession
     }
     catch {

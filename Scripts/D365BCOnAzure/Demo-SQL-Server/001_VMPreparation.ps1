@@ -14,7 +14,7 @@ param(
 )
 Write-Verbose "Starting Transcript"
 Start-Transcript -Path (Join-Path $DownloadPath "Log.txt") | Out-Null
-
+$DownloadPath = Join-Path $DownloadPath "DVD"
 $ErrorActionPreference = "Stop"
 
 . .\002_InstallModules.ps1
