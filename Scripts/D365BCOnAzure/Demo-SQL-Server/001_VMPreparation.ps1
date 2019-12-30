@@ -31,6 +31,6 @@ Get-AndExtractBusinessCentral -BCVersion $BCVersion -BCCumulativeUpdate $BCCumul
 
 . .\005_RestoreSampleDB.ps1
 Write-Verbose "Calling Install-SampleDatabase"
-Install-SampleDatabase -VmAdminPass $VMAdminPass -VmAdminUser $VMAdminUser -DomainName $DomainName -InstallDirectory 
+Install-SampleDatabase -VmAdminPass $VMAdminPass -VmAdminUser $VMAdminUser -DomainName $DomainName -InstallDirectory $DownloadPath
 
 Stop-Transcript
