@@ -51,16 +51,16 @@
             ]
         },
         "VmAdminUserName": {
-            "defaultValue": "vmadmin",
+            "defaultValue": "",
             "type": "string"
         },
         "VmAdminPassword": {
-            "defaultValue": "SuperSecurePassword!",
+            "defaultValue": "",
             "type": "secureString"
         },
         "DomainName": {
             "type": "string",
-            "defaultValue":"bctest.local"
+            "defaultValue":""
         },
         "DomainAdminUsername": {
             "type": "string",
@@ -145,9 +145,72 @@
         "rServicesEnabled": {
             "type": "string",
             "defaultValue": "false"
+        },
+        "DownloadPath": {
+            "defaultValue": "C:\\Install\\DVD",
+            "type": "String"
+        },
+        "BCVersion": {
+            "defaultValue": "14",
+            "type": "String"
+        },
+        "BCCumulativeUpdate": {
+            "defaultValue": "CU0",
+            "type": "String"
+        },
+        "BCLanguage": {
+            "defaultValue": "W1",
+            "type": "String"
         }
     },
+    "functions": [
+        {
+            "namespace": "SoHH",
+            "members": {
+                "JtoP": {
+                    "parameters": [
+                        {
+                            "name": "ParameterVariable",
+                            "type": "object"
+                        }
+                    ],
+                    "output": {
+                        "type": "string",
+                        "value": "[concat(' -', parameters('ParameterVariable').name,' \"', parameters('ParameterVariable').value, '\"')]"
+                    }
+                }
+            }
+        }
+    ],
     "variables": {
+        "ScriptFile": "001_VMPreparation.ps1",        
+        "BCVersion": {
+            "type": "object",
+            "name": "BCVersion",
+            "value": "[parameters('BCVersion')]"
+        },
+        "BCCumulativeUpdate": {
+            "type": "object",
+            "name": "BCCumulativeUpdate",
+            "value": "[parameters('BCCumulativeUpdate')]"
+        },
+        "BCLanguage": {
+            "type": "object",
+            "name": "BCLanguage",
+            "value": "[parameters('BCLanguage')]"
+        },        
+        "VmAdminUser": {
+            "type": "object",
+            "name": "VmAdminUser",
+            "value": "[parameters('VmAdminUserName')]"
+        },
+        "VmAdminPass": {
+            "type": "object",
+            "name": "VmAdminPass",
+            "value": "[parameters('VmAdminPassword')]"
+        },
+        "ScriptParameters": "[concat(SoHH.JtoP(variables('BCVersion')),SoHH.JtoP(variables('BCCumulativeUpdate')),SoHH.JtoP(variables('BCLanguage')),SoHH.JtoP(variables('VmAdminUser')),SoHH.JtoP(variables('VmAdminPass')),' -Verbose', ' -DownloadPath ', parameters('DownloadPath'))]",
+        "CommandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File ', variables('ScriptFile'), variables('ScriptParameters'))]"
     },
     "resources": [
         {
@@ -351,6 +414,34 @@
                 "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('VirtualMachineName'), 'vmssjoindomain')]",
                 "[resourceId('Microsoft.Compute/virtualMachines', parameters('VirtualMachineName'))]"
             ]
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2019-03-01",
+            "name": "[concat(parameters('VirtualMachineName'), '/CustomScriptExtension')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('VirtualMachineName'))]",
+                "[resourceId('Microsoft.SqlVirtualMachine/SqlVirtualMachines', parameters('VirtualMachineName'))]"
+            ],
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.9",
+                "settings": {
+                    "fileUris": [
+                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/001_VMPreparation.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/002_InstallModules.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/003_ConfigureSQL.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/004_DownloadAndExtractBC.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/005_RestoreSampleDB.ps1"
+                    ],
+                    "commandToExecute": "[variables('CommandToExecute')]"
+                },
+                "protectedSettings": {
+                }
+            }
         }
     ],
     "outputs": {
