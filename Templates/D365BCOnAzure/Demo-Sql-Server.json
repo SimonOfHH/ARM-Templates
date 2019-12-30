@@ -431,11 +431,11 @@
                 "typeHandlerVersion": "1.9",
                 "settings": {
                     "fileUris": [
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/001_VMPreparation.ps1",
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/002_InstallModules.ps1",
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/003_ConfigureSQL.ps1",
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/004_DownloadAndExtractBC.ps1",
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/005_RestoreSampleDB.ps1"
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/Demo-SQL-Server/001_VMPreparation.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/Demo-SQL-Server/002_InstallModules.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/Demo-SQL-Server/003_ConfigureSQL.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/Demo-SQL-Server/004_DownloadAndExtractBC.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/Demo-SQL-Server/005_RestoreSampleDB.ps1"
                     ],
                     "commandToExecute": "[variables('CommandToExecute')]"
                 },
