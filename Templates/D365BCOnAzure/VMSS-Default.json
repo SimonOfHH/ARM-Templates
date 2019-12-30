@@ -1,0 +1,166 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VmSsName": {
+            "type": "string"
+        },
+        "VmSize": {
+            "type": "string",
+            "defaultValue": "Standard_DS3_v2",
+            "allowedValues": [
+                "Standard_D2_v2",
+                "Standard_D3_v2",
+                "Standard_D4_v2",
+                "Standard_D5_v2",
+                "Standard_DS2_v2",
+                "Standard_DS3_v2",
+                "Standard_DS4_v2",
+                "Standard_DS5_v2",
+                "Standard_D2_v3",
+                "Standard_D4_v3",
+                "Standard_D8_v3",
+                "Standard_D16_v3",
+                "Standard_D2s_v3",
+                "Standard_D4s_v3",
+                "Standard_D8s_v3",
+                "Standard_D16s_v3"
+            ]
+        },
+        "InstanceCount": {
+            "defaultValue": "2",
+            "type": "string"
+        },
+        "VmAdminUserName": {
+            "type": "string"
+        },
+        "VmAdminPassword": {
+            "type": "securestring"
+        },
+        "EnableAcceleratedNetworking": {
+            "defaultValue": "true",
+            "type": "string"
+        },
+        "BaseImageId": {
+            "type": "string"
+        },
+        "VirtualNetworkName": {
+            "defaultValue": "[concat(resourceGroup().name, '-vnet')]",
+            "type": "String"
+        },
+        "SubnetName": {
+            "defaultValue": "[concat(resourceGroup().name, '-Subnet')]",
+            "type": "String"
+        },
+        "DomainName": {
+            "type": "string"
+        },
+        "DomainAdminUsername": {
+            "type": "string"
+        },
+        "DomainAdminPassword": {
+            "type": "securestring"
+        }
+    },
+    "variables": {
+        "namingInfix": "[toLower(substring(concat(parameters('VmSsName'), uniqueString(resourceGroup().id)), 0, 9))]",
+        "networkApiVersion": "2018-01-01",
+        "storageApiVersion": "2019-06-01",
+        "computeApiVersion": "2019-07-01",
+        "autoscaleApiVersion": "2015-04-01"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "apiVersion": "[variables('computeApiVersion')]",
+            "name": "[parameters('VmSsName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('VmSize')]",
+                "tier": "Standard",
+                "capacity": "[int(parameters('InstanceCount'))]"
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "singlePlacementGroup": true,
+                "upgradePolicy": {
+                    "mode": "Manual"
+                },
+                "virtualMachineProfile": {
+                    "osProfile": {
+                        "computerNamePrefix": "[variables('namingInfix')]",
+                        "windowsConfiguration": {
+                            "provisionVMAgent": true,
+                            "enableAutomaticUpdates": true
+                        },
+                        "adminUsername": "[parameters('VmAdminUserName')]",
+                        "adminPassword": "[parameters('VmAdminPassword')]"
+                    },
+                    "storageProfile": {
+                        "osDisk": {
+                            "createOption": "FromImage",
+                            "caching": "ReadWrite"
+                        },
+                        "imageReference": {
+                            "id": "[parameters('BaseImageId')]"
+                        }
+                    },
+                    "networkProfile": {
+                        "networkInterfaceConfigurations": [
+                            {
+                                "name": "[concat(parameters('VmSsName'), 'Nic')]",
+                                "properties": {
+                                    "primary": true,
+                                    "enableAcceleratedNetworking": "[parameters('EnableAcceleratedNetworking')]",
+                                    "dnsSettings": {
+                                        "dnsServers": [
+                                        ]
+                                    },
+                                    "enableIPForwarding": false,
+                                    "ipConfigurations": [
+                                        {
+                                            "name": "[concat(parameters('VmSsName'), 'IpConfig')]",
+                                            "properties": {
+                                                "subnet": {
+                                                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('VirtualNetworkName'), parameters('SubnetName'))]"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "extensionProfile": {
+                        "extensions": [
+                            {
+                                "name": "vmssjoindomain",
+                                "properties": {
+                                    "autoUpgradeMinorVersion": true,
+                                    "publisher": "Microsoft.Compute",
+                                    "type": "JsonADDomainExtension",
+                                    "typeHandlerVersion": "1.3",
+                                    "settings": {
+                                        "User": "[parameters('DomainAdminUsername')]",
+                                        "Name": "[parameters('DomainName')]",
+                                        "Options": 3,
+                                        "Restart": "true"
+                                    },
+                                    "protectedSettings": {
+                                        "password": "[parameters('DomainAdminPassword')]"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "priority": "Regular"
+                },
+                "overprovision": true,
+                "doNotRunExtensionsOnOverprovisionedVMs": false,
+                "platformFaultDomainCount": 5
+            }
+        }
+    ]
+}

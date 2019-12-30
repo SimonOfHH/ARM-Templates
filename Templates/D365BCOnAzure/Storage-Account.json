@@ -1,0 +1,79 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "StorageAccountName": {
+            "defaultValue": "",
+            "type": "String"
+        },
+        "StorageAccountKind": {
+            "defaultValue": "StorageV2",
+            "allowedValues": [
+                "Storage",
+                "StorageV2",
+                "BlobStorage"
+            ],
+            "type": "String"
+        },
+        "StorageAccountSkuName": {
+            "defaultValue": "Standard_LRS",
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_ZRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Standard_GZRS",
+                "Standard_RAGZRS"
+            ],
+            "type": "String"
+        },
+        "StorageAccountAccessTier": {
+            "defaultValue": "Hot",
+            "allowedValues": [
+                "Hot",
+                "Cool"
+            ],
+            "type": "String"
+        },
+        "resourceTags": {
+            "type": "object",
+            "defaultValue": {}
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-04-01",
+            "name": "[parameters('StorageAccountName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('StorageAccountSkuName')]",
+                "tier": "Standard"
+            },
+            "kind": "[parameters('StorageAccountKind')]",
+            "tags": "[parameters('resourceTags')]",
+            "properties": {
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "[parameters('StorageAccountAccessTier')]"
+            }
+        }
+    ]
+}
