@@ -287,12 +287,12 @@
                 "typeHandlerVersion": "1.9",
                 "settings": {
                     "fileUris": [
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/001_VMPreparation.ps1",
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/002_WriteLocalProperties.ps1",
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/003_InstallModules.ps1",
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/004_DownloadAndExtractBC.ps1",
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/005_InstallBC.ps1",
-                        "https://raw.githubusercontent.com/SimonOfHH/D365-BC-on-Azure/master/assets/VM_Init_Scripts/006_CreateScheduledTask.ps1"
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/VM-for-Image-Gen/001_VMPreparation.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/VM-for-Image-Gen/002_WriteLocalProperties.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/VM-for-Image-Gen/003_InstallModules.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/VM-for-Image-Gen/004_DownloadAndExtractBC.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/VM-for-Image-Gen/005_InstallBC.ps1",
+                        "https://raw.githubusercontent.com/SimonOfHH/ARM-Templates/master/Scripts/D365BCOnAzure/VM-for-Image-Gen/006_CreateScheduledTask.ps1"
                     ],
                     "commandToExecute": "[variables('CommandToExecute')]"
                 },
