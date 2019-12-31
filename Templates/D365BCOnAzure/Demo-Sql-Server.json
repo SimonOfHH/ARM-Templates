@@ -155,7 +155,7 @@
             "type": "String"
         },
         "BCCumulativeUpdate": {
-            "defaultValue": "CU1",
+            "defaultValue": "CU01",
             "type": "String"
         },
         "BCLanguage": {
