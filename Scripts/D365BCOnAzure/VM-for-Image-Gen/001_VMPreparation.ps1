@@ -37,9 +37,6 @@ $localProperties = @{
     ResourceGroupName                   = $ResourceGroupName
     StorageAccountName                  = $StorageAccountName
     KeyVaultName                        = $KeyVaultName
-    StorageTableNameSetup               = $StorageTableNameSetup
-    StorageTableNameEnvironments        = $StorageTableNameEnvironments
-    StorageTableNameEnvironmentDefaults = $StorageTableNameEnvironmentDefaults
     StorageTableNameInfrastructureData  = $StorageTableNameInfrastructureData
 }
 . .\002_WriteLocalProperties.ps1
