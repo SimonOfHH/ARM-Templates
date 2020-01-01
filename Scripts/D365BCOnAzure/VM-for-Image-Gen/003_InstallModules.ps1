@@ -21,7 +21,7 @@ function Set-LocalModules {
     if (-not (Get-PackageProvider -ListAvailable | Where-Object { $_.Name -eq 'NuGet' })) {
         try {
             Write-Verbose "Installing NuGet..."
-            Install-PackageProvider -Name NuGet -Confirm:$False -Force | Out-Null
+            Install-PackageProvider -Name NuGet -Confirm:$False -Scope AllUsers -Force | Out-Null
         }
         catch [Exception] {
             Write-Verbose "Error installing NuGet"

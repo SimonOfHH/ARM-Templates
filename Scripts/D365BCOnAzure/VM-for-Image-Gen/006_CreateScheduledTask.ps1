@@ -39,9 +39,9 @@ function Set-ScheduledTask {
             ResourceGroupName                   = $ResourceGroupName 
             StorageAccountName                  = $StorageAccountName
             KeyVaultName                        = $KeyVaultName
-            StorageTableNameSetup               = $StorageTableNameSetup
-            StorageTableNameEnvironments        = $StorageTableNameEnvironments
-            StorageTableNameEnvironmentDefaults = $StorageTableNameEnvironmentDefaults 
+            #StorageTableNameSetup               = $StorageTableNameSetup
+            #StorageTableNameEnvironments        = $StorageTableNameEnvironments
+            #StorageTableNameEnvironmentDefaults = $StorageTableNameEnvironmentDefaults 
             StorageTableNameInfrastructureData  = $StorageTableNameInfrastructureData
         }
         Start-CustomVMUpdate @autoUpdateParam -Verbose

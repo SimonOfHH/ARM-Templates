@@ -11,12 +11,6 @@ param(
     [string]
     $KeyVaultName,
     [string]
-    $StorageTableNameSetup,    
-    [string]
-    $StorageTableNameEnvironments,    
-    [string]
-    $StorageTableNameEnvironmentDefaults,
-    [string]
     $StorageTableNameInfrastructureData,
     [string]
     $DownloadPath,

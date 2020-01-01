@@ -29,15 +29,6 @@ function Set-LocalProperties {
         $KeyVaultName,
         [Parameter(Mandatory = $true)]
         [string]
-        $StorageTableNameSetup,
-        [Parameter(Mandatory = $true)]
-        [string]
-        $StorageTableNameEnvironments,
-        [Parameter(Mandatory = $true)]
-        [string]
-        $StorageTableNameEnvironmentDefaults,
-        [Parameter(Mandatory = $true)]
-        [string]
         $StorageTableNameInfrastructureData
     ) 
     Write-Verbose "Creating Directory $TargetPath (if not existing)"
@@ -51,9 +42,6 @@ function Set-LocalProperties {
     `$ResourceGroupName = '$ResourceGroupName'
     `$StorageAccountName = '$StorageAccountName'
     `$KeyVaultName = '$KeyVaultName'
-    `$StorageTableNameSetup = '$StorageTableNameSetup'
-    `$StorageTableNameEnvironments = '$StorageTableNameEnvironments'
-    `$StorageTableNameEnvironmentDefaults = '$StorageTableNameEnvironmentDefaults'
     `$StorageTableNameInfrastructureData = '$StorageTableNameInfrastructureData'
     "
     Write-Verbose "Writing the following Content to file $fullscriptpath `n$content"
