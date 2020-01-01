@@ -44,7 +44,7 @@ function Set-ScheduledTask {
             StorageTableNameEnvironmentDefaults = $StorageTableNameEnvironmentDefaults 
             StorageTableNameInfrastructureData  = $StorageTableNameInfrastructureData
         }
-        Start-CustomVMUpdate @autoUpdateParam
+        Start-CustomVMUpdate @autoUpdateParam -Verbose
         Stop-Transcript
     }
     
