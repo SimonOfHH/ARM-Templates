@@ -50,18 +50,6 @@
             "defaultValue": "W1",
             "type": "String"
         },
-        "StorageTableNameSetup": {
-            "defaultValue": "Setup",
-            "type": "String"
-        },
-        "StorageTableNameEnvironments": {
-            "defaultValue": "Environments",
-            "type": "String"
-        },
-        "StorageTableNameEnvironmentDefaults": {
-            "defaultValue": "EnvironmentDefaultValues",
-            "type": "String"
-        },
         "StorageTableNameInfrastructureData": {
             "defaultValue": "InfrastructureData",
             "type": "String"
@@ -178,21 +166,6 @@
             "type": "object",
             "name": "BCLanguage",
             "value": "[parameters('BCLanguage')]"
-        },
-        "TableNames1Param": {
-            "type": "object",
-            "name": "StorageTableNameSetup",
-            "value": "[parameters('StorageTableNameSetup')]"
-        },
-        "TableNames2Param": {
-            "type": "object",
-            "name": "StorageTableNameEnvironments",
-            "value": "[parameters('StorageTableNameEnvironments')]"
-        },
-        "TableNames3Param": {
-            "type": "object",
-            "name": "StorageTableNameEnvironmentDefaults",
-            "value": "[parameters('StorageTableNameEnvironmentDefaults')]"
         },
         "TableNames4Param": {
             "type": "object",
