@@ -125,12 +125,6 @@
                                             "properties": {
                                                 "subnet": {
                                                     "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('VirtualNetworkName'), parameters('SubnetName'))]"
-                                                },
-                                                "publicIpAddressConfiguration": {
-                                                    "name": "ScaleSetPublicIP",
-                                                    "properties": {
-                                                        "idleTimeoutInMinutes": 15
-                                                    }
                                                 }
                                             }
                                         }
