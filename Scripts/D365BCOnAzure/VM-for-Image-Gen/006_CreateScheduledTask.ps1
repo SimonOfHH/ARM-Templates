@@ -33,16 +33,19 @@ function Set-ScheduledTask {
             $ObjectName = $ScaleSetName
             $Instance = $true
         }
+        $newInstanceMarkerFilename = "C:\Install\AutoUpdate\NewInstance.once"
+        if (-not(Test-Path $newInstanceMarkerFilename)){
+            $newInstanceMarkerFilename = ""
+        }
+        
         $autoUpdateParam = @{
             ObjectName                          = $ObjectName
             IsScaleSet                          = $Instance 
             ResourceGroupName                   = $ResourceGroupName 
             StorageAccountName                  = $StorageAccountName
             KeyVaultName                        = $KeyVaultName
-            #StorageTableNameSetup               = $StorageTableNameSetup
-            #StorageTableNameEnvironments        = $StorageTableNameEnvironments
-            #StorageTableNameEnvironmentDefaults = $StorageTableNameEnvironmentDefaults 
             StorageTableNameInfrastructureData  = $StorageTableNameInfrastructureData
+            NewInstanceMarkerFilename           = $newInstanceMarkerFilename
         }
         Start-CustomVMUpdate @autoUpdateParam -Verbose
         Stop-Transcript
