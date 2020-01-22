@@ -36,14 +36,21 @@ function Set-LocalProperties {
     $fullscriptpath = Join-Path $TargetPath 'Properties.ps1'
     Write-Verbose "Fullpath to local properties set to $fullscriptpath"
 
-    $content = "
-    `$VMName = '$VMName'
-    `$ScaleSetName = '$ScaleSetName'
-    `$ResourceGroupName = '$ResourceGroupName'
-    `$StorageAccountName = '$StorageAccountName'
-    `$KeyVaultName = '$KeyVaultName'
-    `$StorageTableNameInfrastructureData = '$StorageTableNameInfrastructureData'
-    "
+    $content = "`$VMName = '$VMName'
+`$ScaleSetName = '$ScaleSetName'
+`$ResourceGroupName = '$ResourceGroupName'
+`$StorageAccountName = '$StorageAccountName'
+`$KeyVaultName = '$KeyVaultName'
+`$StorageTableNameInfrastructureData = '$StorageTableNameInfrastructureData'"
+    Write-Verbose "Writing the following Content to file $fullscriptpath `n$content"
+    Set-Content -Path $fullscriptpath -Value $content
+    
+    
+    $fullscriptpath = Join-Path $TargetPath 'NewInstance.once'    
+    $content = "This is a completely new instance.
+This file will be removed, when the first command has been executed. Do not remove this file manually.
+    
+Do not remove this file manually."
     Write-Verbose "Writing the following Content to file $fullscriptpath `n$content"
     Set-Content -Path $fullscriptpath -Value $content
 }
