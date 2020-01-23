@@ -74,8 +74,10 @@
                                 "purge"
                             ],
                             "certificates": [
+                                "get", "list", "delete", "create", "import", "update", "managecontacts", "getissuers", "listissuers", "setissuers", "deleteissuers", "manageissuers", "recover", "purge"
                             ],
                             "storage": [
+                                "get", "list", "delete", "set", "update", "regeneratekey", "getsas", "listsas", "deletesas", "setsas"
                             ]
                         }
                     }
