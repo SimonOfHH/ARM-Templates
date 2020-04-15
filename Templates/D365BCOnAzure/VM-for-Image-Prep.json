@@ -4,59 +4,73 @@
     "parameters": {
         "VirtualMachineName": {
             "defaultValue": "TestVM01",
-            "type": "String"
+            "type": "string"
         },
         "ScaleSetName": {
             "defaultValue": "",
-            "type": "String"
+            "type": "string"
         },
         "NetworkInterfaceName": {
             "defaultValue": "[concat(parameters('VirtualMachineName'), 'Nic01')]",
-            "type": "String"
+            "type": "string"
         },
         "StorageAccountName": {
             "defaultValue": "[toLower(replace(replace(resourceGroup().name, '-', ''), '_', ''))]",
-            "type": "String"
+            "type": "string"
+        },
+        "VirtualNetworkResourceGroup": {
+            "defaultValue": "[concat(resourceGroup().name)]",
+            "type": "string"
         },
         "VirtualNetworkName": {
             "defaultValue": "[concat(resourceGroup().name, '-vnet')]",
-            "type": "String"
+            "type": "string"
         },
         "SubnetName": {
             "defaultValue": "[concat(resourceGroup().name, '-Subnet')]",
-            "type": "String"
+            "type": "string"
+        },
+        "StorageAccountType": {
+            "defaultValue": "StandardSSD_LRS",
+            "type": "string",
+            "allowedValues": [
+                "Standard_LRS",
+                "Premium_LRS",
+                "StandardSSD_LRS",
+                "UltraSSD_LRS"
+            ]
         },
         "PrivateIpAddress": {
             "defaultValue": "",
-            "type": "String"
+            "type": "string"
         },
         "KeyVaultName": {
             "defaultValue": "[concat(toLower(replace(replace(resourceGroup().name, '-', ''), '_', '')),'kv')]",
-            "type": "String"
+            "type": "string"
         },
         "DownloadPath": {
             "defaultValue": "C:\\Install\\",
-            "type": "String"
+            "type": "string"
         },
         "BCVersion": {
             "defaultValue": "14",
-            "type": "String"
+            "type": "string"
         },
         "BCCumulativeUpdate": {
             "defaultValue": "CU0",
-            "type": "String"
+            "type": "string"
         },
         "BCLanguage": {
             "defaultValue": "W1",
-            "type": "String"
+            "type": "string"
         },
         "StorageTableNameInfrastructureData": {
             "defaultValue": "InfrastructureData",
-            "type": "String"
+            "type": "string"
         },
         "VmAdminUserName": {
             "defaultValue": "vmadmin",
-            "type": "String"
+            "type": "string"
         },
         "VmAdminPassword": {
             "type": "securestring",
@@ -99,7 +113,7 @@
         },
         "InstallationType": {
             "defaultValue": "App",
-            "type": "String"
+            "type": "string"
         },
         "resourceTags": {
             "type": "object",
@@ -217,7 +231,7 @@
                         "createOption": "FromImage",
                         "caching": "ReadWrite",
                         "managedDisk": {
-                            "storageAccountType": "Premium_LRS"
+                            "storageAccountType": "[parameters('StorageAccountType')]"
                         },
                         "diskSizeGB": 127
                     },
@@ -288,7 +302,7 @@
                             "privateIPAddress": "[parameters('PrivateIpAddress')]",
                             "privateIPAllocationMethod": "[if(equals(parameters('PrivateIpAddress'),''),'Dynamic', 'Static')]",
                             "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('VirtualNetworkName'), parameters('SubnetName'))]"
+                                "id": "[resourceId(parameters('VirtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('VirtualNetworkName'), parameters('SubnetName'))]"
                             },
                             "primary": true,
                             "privateIPAddressVersion": "IPv4"
