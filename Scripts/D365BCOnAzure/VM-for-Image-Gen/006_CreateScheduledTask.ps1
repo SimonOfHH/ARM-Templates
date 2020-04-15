@@ -26,12 +26,12 @@ function Set-ScheduledTask {
         
         . ("C:\Install\AutoUpdate\Properties.ps1")
         $Instance = $false
-        if (-not([string]::IsNullOrEmpty($VMName))) {
-            $ObjectName = $VMName
-        }
-        else {
+        if (-not([string]::IsNullOrEmpty($ScaleSetName))) {
             $ObjectName = $ScaleSetName
             $Instance = $true
+        }
+        else {
+            $ObjectName = $VMName
         }
         $newInstanceMarkerFilename = "C:\Install\AutoUpdate\NewInstance.once"
         if (-not(Test-Path $newInstanceMarkerFilename)){

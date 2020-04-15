@@ -27,12 +27,12 @@ param(
     $VMAdminPass
 )
 Write-Verbose "Starting Transcript"
-Start-Transcript -Path (Join-Path $DownloadPath "Log.txt") | Out-Null
+Start-Transcript -Path (Join-Path $DownloadPath "Log_Image_Preparation.txt") | Out-Null
 
 $ErrorActionPreference = "Stop"
 
 $localProperties = @{
-    VMName                              = ""
+    VMName                              = $VMName
     ScaleSetName                        = $ScaleSetName
     ResourceGroupName                   = $ResourceGroupName
     StorageAccountName                  = $StorageAccountName
