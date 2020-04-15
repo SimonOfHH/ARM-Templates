@@ -64,6 +64,10 @@
         },
         "DomainAdminPassword": {
             "type": "securestring"
+        },
+        "resourceTags": {
+            "type": "object",
+            "defaultValue": {}
         }
     },
     "variables": {
@@ -87,6 +91,7 @@
             "identity": {
                 "type": "SystemAssigned"
             },
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "singlePlacementGroup": true,
                 "upgradePolicy": {
