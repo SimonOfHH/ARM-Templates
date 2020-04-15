@@ -31,6 +31,8 @@ Start-Transcript -Path (Join-Path $DownloadPath "Log_Image_Preparation.txt") | O
 
 $ErrorActionPreference = "Stop"
 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 $localProperties = @{
     VMName                              = $VMName
     ScaleSetName                        = $ScaleSetName
