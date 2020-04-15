@@ -44,13 +44,17 @@
         "BaseImageId": {
             "type": "string"
         },
+        "VirtualNetworkResourceGroup": {
+            "defaultValue": "[concat(resourceGroup().name)]",
+            "type": "string"
+        },
         "VirtualNetworkName": {
             "defaultValue": "[concat(resourceGroup().name, '-vnet')]",
-            "type": "String"
+            "type": "string"
         },
         "SubnetName": {
             "defaultValue": "[concat(resourceGroup().name, '-Subnet')]",
-            "type": "String"
+            "type": "string"
         },
         "DomainName": {
             "type": "string"
@@ -124,7 +128,7 @@
                                             "name": "[concat(parameters('VmSsName'), 'IpConfig')]",
                                             "properties": {
                                                 "subnet": {
-                                                    "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('VirtualNetworkName'), parameters('SubnetName'))]"
+                                                    "id": "[resourceId(parameters('VirtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('VirtualNetworkName'), parameters('SubnetName'))]"
                                                 }
                                             }
                                         }
