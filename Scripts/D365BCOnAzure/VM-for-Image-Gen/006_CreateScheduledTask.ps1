@@ -16,6 +16,7 @@ function Set-ScheduledTask {
             $error.clear()
         }
         Start-Transcript -Path "C:\Install\Log\AutoUpdate.$(get-date -format yyyyMMddhhmmss).log"        
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         if (Get-Module -Name D365BCOnAzureHelper -ListAvailable) {
             Update-Module -Name D365BCOnAzureHelper -Force
         }
