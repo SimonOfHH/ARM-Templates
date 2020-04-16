@@ -7,7 +7,11 @@ param(
     [string]
     $ResourceGroupName,
     [string]
+    $StorageAccountResourceGroupName,
+    [string]
     $StorageAccountName,
+    [string]
+    $KeyVaultResourceGroupName,
     [string]
     $KeyVaultName,
     [string]
@@ -34,12 +38,14 @@ $ErrorActionPreference = "Stop"
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 $localProperties = @{
-    VMName                              = $VMName
-    ScaleSetName                        = $ScaleSetName
-    ResourceGroupName                   = $ResourceGroupName
-    StorageAccountName                  = $StorageAccountName
-    KeyVaultName                        = $KeyVaultName
-    StorageTableNameInfrastructureData  = $StorageTableNameInfrastructureData
+    VMName                             = $VMName
+    ScaleSetName                       = $ScaleSetName
+    ResourceGroupName                  = $ResourceGroupName
+    StorageAccountResourceGroupName    = $StorageAccountResourceGroupName
+    StorageAccountName                 = $StorageAccountName
+    KeyVaultResourceGroupName          = $KeyVaultResourceGroupName
+    KeyVaultName                       = $KeyVaultName
+    StorageTableNameInfrastructureData = $StorageTableNameInfrastructureData
 }
 . .\002_WriteLocalProperties.ps1
 Write-Verbose "Calling Set-LocalProperties"

@@ -23,7 +23,13 @@ function Set-LocalProperties {
         $ResourceGroupName,
         [Parameter(Mandatory = $true)]
         [string]
+        $StorageAccountResourceGroupName,
+        [Parameter(Mandatory = $true)]
+        [string]
         $StorageAccountName,
+        [Parameter(Mandatory = $true)]
+        [string]
+        $KeyVaultResourceGroupName,
         [Parameter(Mandatory = $true)]
         [string]
         $KeyVaultName,
@@ -39,7 +45,9 @@ function Set-LocalProperties {
     $content = "`$VMName = '$VMName'
 `$ScaleSetName = '$ScaleSetName'
 `$ResourceGroupName = '$ResourceGroupName'
+`$StorageAccountResourceGroupName = '$StorageAccountResourceGroupName'
 `$StorageAccountName = '$StorageAccountName'
+`$KeyVaultResourceGroupName = '$KeyVaultResourceGroupName'
 `$KeyVaultName = '$KeyVaultName'
 `$StorageTableNameInfrastructureData = '$StorageTableNameInfrastructureData'"
     Write-Verbose "Writing the following Content to file $fullscriptpath `n$content"

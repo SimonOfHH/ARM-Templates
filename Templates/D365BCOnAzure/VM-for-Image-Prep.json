@@ -14,6 +14,10 @@
             "defaultValue": "[concat(parameters('VirtualMachineName'), 'Nic01')]",
             "type": "string"
         },
+        "StorageAccountResourceGroupName": {
+            "defaultValue": "[resourceGroup().name]",
+            "type": "string"
+        },
         "StorageAccountName": {
             "defaultValue": "[toLower(replace(replace(resourceGroup().name, '-', ''), '_', ''))]",
             "type": "string"
@@ -42,6 +46,10 @@
         },
         "PrivateIpAddress": {
             "defaultValue": "",
+            "type": "string"
+        },
+        "KeyVaultResourceGroupName": {
+            "defaultValue": "[resourceGroup().name]",
             "type": "string"
         },
         "KeyVaultName": {
@@ -156,10 +164,20 @@
             "name": "ResourceGroupName",
             "value": "[resourceGroup().name]"
         },
+        "StorAccResGrpParam": {
+            "type": "object",
+            "name": "StorageAccountResourceGroupName",
+            "value": "[parameters('StorageAccountResourceGroupName')]"
+        },
         "StorAccParam": {
             "type": "object",
             "name": "StorageAccountName",
             "value": "[parameters('StorageAccountName')]"
+        },
+        "KeyVaultResGrpNameParam": {
+            "type": "object",
+            "name": "KeyVaultResourceGroupName",
+            "value": "[parameters('KeyVaultResourceGroupName')]"
         },
         "KeyVaultNameParam": {
             "type": "object",
@@ -201,7 +219,7 @@
             "name": "VmAdminPass",
             "value": "[parameters('VmAdminPassword')]"
         },
-        "ScriptParameters": "[concat(SoHH.JtoP(variables('VMNameParam')), SoHH.JtoP(variables('ScaleSetNameParam')), SoHH.JtoP(variables('ResGrpParam')), SoHH.JtoP(variables('StorAccParam')), SoHH.JtoP(variables('KeyVaultNameParam')),SoHH.JtoP(variables('TableNames4Param')),SoHH.JtoP(variables('BCVersion')),SoHH.JtoP(variables('BCCumulativeUpdate')),SoHH.JtoP(variables('BCLanguage')),SoHH.JtoP(variables('InstallationType')),SoHH.JtoP(variables('VmAdminUser')),SoHH.JtoP(variables('VmAdminPass')),' -Verbose', ' -DownloadPath ', parameters('DownloadPath'))]",
+        "ScriptParameters": "[concat(SoHH.JtoP(variables('VMNameParam')), SoHH.JtoP(variables('ScaleSetNameParam')), SoHH.JtoP(variables('ResGrpParam')), SoHH.JtoP(variables('StorAccResGrpParam')), SoHH.JtoP(variables('StorAccParam')), SoHH.JtoP(variables('KeyVaultResGrpNameParam')), SoHH.JtoP(variables('KeyVaultNameParam')),SoHH.JtoP(variables('TableNames4Param')),SoHH.JtoP(variables('BCVersion')),SoHH.JtoP(variables('BCCumulativeUpdate')),SoHH.JtoP(variables('BCLanguage')),SoHH.JtoP(variables('InstallationType')),SoHH.JtoP(variables('VmAdminUser')),SoHH.JtoP(variables('VmAdminPass')),' -Verbose', ' -DownloadPath ', parameters('DownloadPath'))]",
         "CommandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File ', variables('ScriptFile'), variables('ScriptParameters'))]"
     },
     "resources": [
