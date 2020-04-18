@@ -39,8 +39,8 @@
             "type": "securestring"
         },
         "EnableAcceleratedNetworking": {
-            "defaultValue": "true",
-            "type": "string"
+            "defaultValue": true,
+            "type": "bool"
         },
         "BaseImageId": {
             "type": "string"
