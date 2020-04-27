@@ -14,7 +14,7 @@ function Install-BusinessCentralStarter {
         [ValidateSet('13', '14', '15')]
         [string]
         $Version,
-        [ValidateSet('App', 'Web')]
+        [ValidateSet('App', 'Web', 'Both')]
         [Parameter(Mandatory = $false)]
         [string]
         $InstallationType = "App",

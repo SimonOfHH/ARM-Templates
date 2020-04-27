@@ -24,7 +24,7 @@ param(
     $BCCumulativeUpdate,
     [string]
     $BCLanguage,
-    [ValidateSet('App', 'Web')]
+    [ValidateSet('App', 'Web', 'Both')]
     [string]
     $InstallationType = "App",     
     $VMAdminUser,
