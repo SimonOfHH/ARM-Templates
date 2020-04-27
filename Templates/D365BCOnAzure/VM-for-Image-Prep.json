@@ -285,6 +285,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Compute/virtualMachines', parameters('VirtualMachineName'))]"
             ],
+            "tags": "[parameters('resourceTags')]",
             "properties": {
                 "autoUpgradeMinorVersion": true,
                 "publisher": "Microsoft.Compute",
