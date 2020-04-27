@@ -30,7 +30,7 @@ function Set-LocalModules {
         }
     }
 
-    $modulesToInstall = @("Cloud.Ready.Software.NAV", "Az", "AzTable", "D365BCDownloadHelper", "D365BCOnAzureHelper")
+    $modulesToInstall = @("Cloud.Ready.Software.NAV", "Az", "AzTable", "D365BCDownloadHelper", "D365BCOnAzureHelper", "D365BCAppHelper")
     foreach ($moduleToInstall in $modulesToInstall) {
         if (-not (Get-Module -ListAvailable -Name $moduleToInstall)) {
             try {
